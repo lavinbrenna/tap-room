@@ -3,6 +3,7 @@ import Keg from "./Keg";
 import PropTypes from "prop-types";
 
 function KegList(props){
+  const {onSellPint} = props;
   return (
   <React.Fragment>
     <hr/>
@@ -18,11 +19,10 @@ function KegList(props){
         id={keg.id}
         key={keg.id}
         />
-        <button>Sell Pint</button>
+        <button onClick={()=>onSellPint(keg.id)}>Sell Pint</button>
         <hr/>
       </React.Fragment>
     )}
-    
   </React.Fragment>
   );
 }
@@ -30,7 +30,7 @@ function KegList(props){
 KegList.propTypes ={
   kegList: PropTypes.array,
   onKegSelection: PropTypes.func,
-  // onClickingSellPint: PropTypes.func
+  onSellPint: PropTypes.func
 };
 
 export default KegList;
