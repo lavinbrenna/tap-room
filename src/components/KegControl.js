@@ -2,7 +2,7 @@ import React from 'react';
 import NewKegForm from './NewKegForm';
 import KegList from './KegList';
 import KegDetail from './KegDetails';
-import EditKegForm from './EditKegForm';
+
 
 class KegControl extends React.Component{
   constructor(props){
@@ -11,7 +11,6 @@ class KegControl extends React.Component{
       formVisibleOnPage: false,
       mainKegList: [],
       selectedKeg: null,
-      editKeg: false,
       sellPint: false
     };
   }
@@ -20,7 +19,6 @@ class KegControl extends React.Component{
       this.setState({
         formVisibleOnPage: false,
         selectedKeg: null,
-        editKeg: false
       });
     }else{
       this.setState(prevState => ({
@@ -28,20 +26,7 @@ class KegControl extends React.Component{
       }));
     }
   }
-  handleEditClick = (kegToEdit) => {
-    console.log("handle Edit!");
-    this.setState({editKeg:true});
-  }
-  handleEditKegInList = (kegToEdit)=>{
-    const editedMainKegList = this.state.mainKegList
-    .filter(keg=> keg.id!== this.state.selectedKeg.id)
-    .concat(kegToEdit);
-    this.setState({
-      mainKegList: editedMainKegList,
-      editKeg: false,
-      selectedKeg: null
-    });
-  }
+
   handleSellPint = (kegToSell) => {
     console.log("sell pint!");
     this.setState({sellPint: true});
@@ -73,13 +58,10 @@ class KegControl extends React.Component{
     let currentlyVisibleState = null;
     let buttonText = null;
 
-    if(this.state.editKeg){
-      currentlyVisibleState = <EditKegForm keg = {this.state.selectedKeg} onEditTicket ={this.handleEditingKegInList}/>
-      buttonText = "Return to Keg List";
-    }
+
     // else if(this.state.sellPint){
     // }
-    else if(this.state.selectedKeg != null){
+    if(this.state.selectedKeg != null){
       currentlyVisibleState = <KegDetail keg = {this.state.selectedKeg} onClickingDelete = {this.handleDeletingKeg} onClickingEdit = {this.handleEditClick}/>
       buttonText = "Return to Keg List";
     }
