@@ -19,6 +19,7 @@ class KegControl extends React.Component{
       this.setState({
         formVisibleOnPage: false,
         selectedKeg: null,
+        sellPint: false
       });
     }else{
       this.setState(prevState => ({
@@ -27,13 +28,24 @@ class KegControl extends React.Component{
     }
   }
 
-  handleSellPint = (kegToSell) => {
+  handleSellPint = () => {
     console.log("sell pint!");
     this.setState({sellPint: true});
-    // const sellingMainKegList = this.state.mainKegList
-    // .filter(keg => keg.id !== this.state.selectedKeg.id)
-    // .concat(kegToSell.pintsLeft - 1);
-    // this.setState({mainKegList: sellingMainKegList, selectedKeg: null , sellPint: false});
+  }
+
+  handlePintDecrease = (id) => {
+    const newKeg = this.state.mainKegList.filter(keg => keg.id === id)[0];
+    if(newKeg.pintsLeft - 1 < 0){
+      newKeg.pintsLeft = 0;
+    }else{
+      newKeg.pintsLeft -= 1;
+    }
+    const newMainKegList = this.state.mainKegList
+    .filter(keg => keg.id !== id)
+    .concat(newKeg);
+    this.setState({mainKegList: newMainKegList,
+      selectedKeg: null, sellPint: false
+    });
   }
 
   handleAddingNewKegToList = (newKeg) => {
@@ -57,11 +69,7 @@ class KegControl extends React.Component{
   render(){
     let currentlyVisibleState = null;
     let buttonText = null;
-
-
-    // else if(this.state.sellPint){
-    // }
-    if(this.state.selectedKeg != null){
+  if(this.state.selectedKeg != null){
       currentlyVisibleState = <KegDetail keg = {this.state.selectedKeg} onClickingDelete = {this.handleDeletingKeg} onClickingEdit = {this.handleEditClick}/>
       buttonText = "Return to Keg List";
     }
@@ -70,7 +78,7 @@ class KegControl extends React.Component{
       buttonText = "Return to Keg List";
     }
     else{
-      currentlyVisibleState = <KegList kegList={this.state.mainKegList} onKegSelection = {this.handleChangingSelectedKeg}/>
+      currentlyVisibleState = <KegList kegList={this.state.mainKegList} onKegSelection = {this.handleChangingSelectedKeg} onSellPint = {this.handlePintDecrease}/>
       buttonText = "Add Keg";
     }
     return(
